@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RefreshTokenRequest;
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +29,17 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request, HttpServletRequest httpServletRequest) {
         return ResponseEntity.ok(authService.login(request, clientIp(httpServletRequest), httpServletRequest.getHeader("User-Agent")));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshTokenRequest request, HttpServletRequest httpServletRequest) {
+        return ResponseEntity.ok(authService.refresh(request, clientIp(httpServletRequest), httpServletRequest.getHeader("User-Agent")));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@Valid @RequestBody RefreshTokenRequest request, HttpServletRequest httpServletRequest) {
+        authService.logout(request, clientIp(httpServletRequest), httpServletRequest.getHeader("User-Agent"));
+        return ResponseEntity.noContent().build();
     }
 
     private String clientIp(HttpServletRequest request) {
